@@ -1,252 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>dscrd.lol | Discord-themed URL shortener</title>
+    <title>dscrd.lol</title>
     <style>
-        :root {
-            --discord-blurple: #5865F2;
-            --discord-dark: #36393F;
-            --discord-darker: #2F3136;
-            --discord-darkest: #202225;
-            --discord-light: #DCDDDE;
-            --discord-green: #3BA55C;
-        }
-        
-        body {
-            font-family: 'Whitney', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            background-color: var(--discord-dark);
-            color: var(--discord-light);
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-        
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 2rem;
-            flex: 1;
-        }
-        
-        header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-        
-        h1 {
-            color: white;
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .logo {
-            font-weight: bold;
-            color: var(--discord-blurple);
-        }
-        
-        .subtitle {
-            color: var(--discord-light);
-            opacity: 0.7;
-        }
-        
-        .shortener-box {
-            background-color: var(--discord-darker);
-            border-radius: 8px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        
-        .form-group {
-            margin-bottom: 1rem;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-        }
-        
-        input {
-            width: 100%;
-            padding: 0.75rem;
-            border-radius: 4px;
-            border: none;
-            background-color: var(--discord-darkest);
-            color: white;
-            font-size: 1rem;
-        }
-        
-        input:focus {
-            outline: 2px solid var(--discord-blurple);
-        }
-        
-        button {
-            background-color: var(--discord-blurple);
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 4px;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: background-color 0.2s;
-        }
-        
-        button:hover {
-            background-color: #4752C4;
-        }
-        
-        .result {
-            margin-top: 1rem;
-            padding: 1rem;
-            background-color: var(--discord-darkest);
-            border-radius: 4px;
-            display: none;
-        }
-        
-        .result.active {
-            display: block;
-        }
-        
-        .short-url {
-            color: var(--discord-green);
-            font-weight: 600;
-            word-break: break-all;
-        }
-        
-        .copy-btn {
-            background-color: var(--discord-darkest);
-            border: 1px solid var(--discord-blurple);
-            margin-left: 0.5rem;
-            padding: 0.25rem 0.5rem;
-            font-size: 0.8rem;
-        }
-        
-        footer {
-            text-align: center;
-            padding: 1rem;
-            background-color: var(--discord-darkest);
-            font-size: 0.9rem;
-            color: var(--discord-light);
-            opacity: 0.7;
-        }
-        
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-        
-        .feature {
-            background-color: var(--discord-darker);
-            padding: 1rem;
-            border-radius: 8px;
-        }
-        
-        .feature h3 {
-            color: white;
-            margin-top: 0;
-        }
+        body { font-family: Arial, sans-serif; background: #36393f; color: #fff; margin: 0; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; }
+        input, button { padding: 10px; border-radius: 4px; border: none; }
+        input { width: 100%; margin-bottom: 10px; background: #2f3136; color: #fff; }
+        button { background: #5865f2; color: #fff; cursor: pointer; }
+        #result { margin-top: 20px; display: none; }
     </style>
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1><span class="logo">dscrd.lol</span></h1>
-            <p class="subtitle">url shortner for discord</p>
-        </header>
-        
-        <div class="shortener-box">
-            <div class="form-group">
-                <label for="url">URL to shorten</label>
-                <input type="url" id="url" placeholder="https://example.com/very-long-url" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="custom">Custom path (optional)</label>
-                <input type="text" id="custom" placeholder="my-link">
-                <small>Leave blank for a random one</small>
-            </div>
-            
-            <button id="shorten-btn">Create dscrd.lol link</button>
-            
-            <div class="result" id="result">
-                <p>Your shortened URL:</p>
-                <p>
-                    <span class="short-url" id="short-url"></span>
-                    <button class="copy-btn" id="copy-btn">Copy</button>
-                </p>
-            </div>
-        </div>
-        
-        <div class="features">
-            <div class="feature">
-                <h3>Permanent Links</h3>
-                <p>Your shortened URLs will work forever. No expiration, no deletion.</p>
-            </div>
-            <div class="feature">
-                <h3>Discord Themed</h3>
-                <p>Matches Discord's dark theme and aesthetic for seamless integration.</p>
-            </div>
-            <div class="feature">
-                <h3>Custom Paths</h3>
-                <p>Choose your own path or let us generate a random one for you.</p>
-            </div>
+        <h1>dscrd.lol</h1>
+        <input type="url" id="url" placeholder="Enter URL">
+        <input type="text" id="custom" placeholder="Custom path (optional)">
+        <button id="shorten-btn">Shorten</button>
+        <div id="result">
+            <p>Short URL: <span id="short-url"></span></p>
         </div>
     </div>
-    
+
     <script>
         document.getElementById('shorten-btn').addEventListener('click', async () => {
-            const longUrl = document.getElementById('url').value;
+            const url = document.getElementById('url').value;
             const customPath = document.getElementById('custom').value;
             
-            if (!longUrl) {
-                alert('Please enter a URL to shorten');
-                return;
-            }
-            
             try {
-                // In a real implementation, this would call your backend API
-                const response = await fetch('/api/shorten', {
+                const response = await fetch('/qatual/static/shorten', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        url: longUrl,
-                        customPath: customPath || undefined
-                    })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url, customPath })
                 });
                 
                 const data = await response.json();
+                if (!response.ok) throw new Error(data.error);
                 
-                if (response.ok) {
-                    const shortUrl = `https://dscrd.lol/${data.shortPath}`;
-                    document.getElementById('short-url').textContent = shortUrl;
-                    document.getElementById('result').classList.add('active');
-                } else {
-                    throw new Error(data.error || 'Failed to shorten URL');
-                }
+                document.getElementById('short-url').textContent = `https://dscrd.lol/${data.shortPath}`;
+                document.getElementById('result').style.display = 'block';
             } catch (error) {
                 alert(error.message);
             }
-        });
-        
-        document.getElementById('copy-btn').addEventListener('click', () => {
-            const shortUrl = document.getElementById('short-url').textContent;
-            navigator.clipboard.writeText(shortUrl).then(() => {
-                const btn = document.getElementById('copy-btn');
-                btn.textContent = 'Copied!';
-                setTimeout(() => {
-                    btn.textContent = 'Copy';
-                }, 2000);
-            });
         });
     </script>
 </body>
